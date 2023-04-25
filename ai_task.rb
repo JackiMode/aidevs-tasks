@@ -39,9 +39,8 @@ class AiTask
   private 
 
   def validate_response(response, url, method)
-    # @log.write("HTTP #{response.msg} #{response.code} #{method} #{url}")
     return if response.code.to_s.match?(/^200$/)
-    raise ResponseError.new("#{Time.now} RESPONSE ERROR", response, url, @log)
+    raise ResponseError.new("#{Time.now} RESPONSE ERROR", response, url, @log, method)
   end
 
   def get_token
