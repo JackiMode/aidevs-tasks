@@ -1,15 +1,20 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+$LOAD_PATH << '.'
+
 require 'dotenv/load'
 require 'httparty'
 require 'json'
+require 'response_error.rb'
+require 'my_logger.rb'
 
 class AiTask
-  attr_reader :api_key, :endpoint
-  attr_accessor :task_name, :token
+  attr_reader :api_key, :endpoint, :task_name, :log
+  attr_accessor :token
 
   def initialize(task_name)
+    @log = MyLogger.new('logs/ai_devs.log')
     @api_key = ENV['apikey']
     @endpoint = 'https://zadania.aidevs.pl/'
     @task_name = task_name
@@ -17,26 +22,34 @@ class AiTask
   end
 
   def send_answer(answer)
-    return unless @token
     url = "#{@endpoint}answer/#{@token}"
     data = { "answer": "#{answer}", "author": "jacki" }.to_json
     response =  HTTParty.post(url, body: data)
-    puts response
+    validate_response(response, url, 'POST')
+    response
   end
 
   def get_task
-    return unless @token
     url = "#{@endpoint}task/#{@token}"
     response =  HTTParty.get(url)
+    validate_response(response, url, 'POST')
+    response
   end
 
   private 
+
+  def validate_response(response, url, method)
+    # @log.write("HTTP #{response.msg} #{response.code} #{method} #{url}")
+    return if response.code.to_s.match?(/^200$/)
+    raise ResponseError.new("#{Time.now} RESPONSE ERROR", response, url, @log)
+  end
 
   def get_token
     url = "#{@endpoint}token/#{@task_name}"
     data = { "apikey": "#{@api_key}", "author": "jacki" }.to_json
     response =  HTTParty.post(url, body: data)
-    token = response['code'].zero? ? response['token'] : nil
+    validate_response(response, url, 'POST')
+    @token = response['token']
   end
 
 end
