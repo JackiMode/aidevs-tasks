@@ -16,7 +16,7 @@ class AiTask
   def initialize(task_name)
     @log = MyLogger.new('logs/ai_devs.log')
     @api_key = ENV['apikey']
-    @endpoint = 'https://zadania.aidevs.pl/'
+    @endpoint = ENV['url']
     @task_name = task_name
     @token = get_token
   end

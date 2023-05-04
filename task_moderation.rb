@@ -24,6 +24,7 @@ headers = { 'Content-Type' => 'application/json', 'Authorization' => "Bearer #{E
 task['input'].each do |line|
   body = JSON.generate({ input: line.strip })
   response = HTTParty.post(moderation_url, body: body, headers: headers)
+  puts response
   r = response['results'][0]['flagged'] ? 1 : 0
   task_response << r
 end
