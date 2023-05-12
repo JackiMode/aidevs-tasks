@@ -18,37 +18,39 @@ class AiTask
     @api_key = ENV['apikey']
     @endpoint = ENV['url']
     @task_name = task_name
-    @token = get_token
+    @token = api_token
   end
 
   def send_answer(answer)
-    url = "#{@endpoint}answer/#{@token}"
-    data = { "answer": answer}.to_json
-    response =  HTTParty.post(url, body: data)
-    validate_response(response, url, 'POST')
-    response
+    post("#{@endpoint}answer/#{@token}", { "answer": answer }.to_json)
   end
 
-  def get_task
-    url = "#{@endpoint}task/#{@token}"
-    response =  HTTParty.get(url)
-    validate_response(response, url, 'POST')
-    response
+  def task
+    get("#{@endpoint}task/#{@token}")
   end
 
   private 
 
   def validate_response(response, url, method)
     return if response.code.to_s.match?(/^200$/)
+    
     raise ResponseError.new("#{Time.now} RESPONSE ERROR", response, url, @log, method)
   end
 
-  def get_token
-    url = "#{@endpoint}token/#{@task_name}"
-    data = { "apikey": "#{@api_key}"}.to_json
-    response =  HTTParty.post(url, body: data)
-    validate_response(response, url, 'POST')
+  def api_token
+    response = post("#{@endpoint}token/#{@task_name}", { "apikey": @api_key.to_s }.to_json)
     @token = response['token']
   end
 
+  def post(url, data)
+    response = HTTParty.post(url, body: data)
+    validate_response(response, url, 'POST')
+    response
+  end
+
+  def get(url)
+    response = HTTParty.get(url)
+    validate_response(response, url, 'GET')
+    response
+  end
 end
