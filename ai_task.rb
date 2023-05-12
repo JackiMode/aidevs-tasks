@@ -27,6 +27,15 @@ class AiTask
 
   def task
     get("#{@endpoint}task/#{@token}")
+    @token = get_token
+  end
+
+  def send_answer(answer)
+    url = "#{@endpoint}answer/#{@token}"
+    data = { "answer": answer}.to_json
+    response =  HTTParty.post(url, body: data)
+    validate_response(response, url, 'POST')
+    response
   end
 
   private 
@@ -53,4 +62,13 @@ class AiTask
     validate_response(response, url, 'GET')
     response
   end
+
+  def get_token
+    url = "#{@endpoint}token/#{@task_name}"
+    data = { "apikey": "#{@api_key}"}.to_json
+    response =  HTTParty.post(url, body: data)
+    validate_response(response, url, 'POST')
+    @token = response['token']
+  end
+
 end
