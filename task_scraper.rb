@@ -8,9 +8,8 @@ require 'httparty'
 require 'json'
 require 'openai' #https://github.com/alexrudall/ruby-openai
 
-
 ai = AiTask.new('scraper')
-task = ai.get_task
+task = ai.task
 puts task
 file_name = task['input']
 
@@ -23,16 +22,13 @@ OpenAI.configure do |config|
 end
 client = OpenAI::Client.new
 
-
-while(ok) do
+loop do
   response = HTTParty.get(file_name, headers: headers)
   puts "Code(#{response.code.class}): #{response.code}; #{response.message}"
   if response.code == 500
-    ok = true 
     puts 'sleep 1s...'
     sleep 1
   elsif response.code == 200
-    ok = false
     # puts response.body
     system_msg = "#{response.body}. Answer user questions based on the knowledge provided by the system. Answer in polish langauage only. Answer shoud be short - max 150 chars. "
     response = client.chat(
@@ -45,7 +41,6 @@ while(ok) do
     answer =  response.dig("choices", 0, "message", "content").gsub('.', '')
     puts "Odpowiedź: #{answer}"
     puts ai.send_answer(answer)
-  else
-    ok = true
+    break
   end
 end

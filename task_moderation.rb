@@ -16,7 +16,7 @@ require 'ai_task.rb'
 #   }'
 
 ai = AiTask.new('moderation')
-task = ai.get_task
+task = ai.task
 task_response = []
 
 moderation_url = 'https://api.openai.com/v1/moderations'

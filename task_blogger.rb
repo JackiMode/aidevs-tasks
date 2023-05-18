@@ -11,10 +11,9 @@ OpenAI.configure do |config|
   config.organization_id = ENV.fetch('OPENAI_ORGANIZATION_ID') # Optional.
 end
 
-
 ai = AiTask.new('blogger')
-task = ai.get_task
-system_msg =  task['msg']
+task = ai.task
+system_msg = task['msg']
 
 posts = []
 
