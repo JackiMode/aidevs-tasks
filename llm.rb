@@ -42,9 +42,7 @@ class LLM
     return @model[:chat] == model_name
   end
 
-  def chat(options = {})
-    # puts options[:messages]
-    # puts '---'
+  def functions_chat(options = {})
     messages = options[:messages] ? options[:messages] : [{role: "user", content: "Hi Bot!"}] 
     model_name = @model[:chat] unless options[:model_name]
     temperature = 0.5 unless options[:temperature]
@@ -54,10 +52,32 @@ class LLM
           model: model_name,
           messages: messages,
           temperature: temperature,
+          functions: options[:functions] 
       })
-    # puts messages
-    # puts "==="
+    rescue StandardError => e
+      puts e
+    end
+    # puts '---'
     # puts response
+    # puts '==='
+    # puts response.dig("choices", 0, "message", "function_call")
+    # puts '$$$'
+    response.dig("choices", 0, "message", "function_call")
+  end
+
+  def chat(options = {})
+    messages = options[:messages] ? options[:messages] : [{role: "user", content: "Hi Bot!"}] 
+    return functions_chat(options) if options[:functions] 
+
+    model_name = @model[:chat] unless options[:model_name]
+    temperature = 0.5 unless options[:temperature]
+    begin
+      response = @client.chat(
+      parameters: {
+          model: model_name,
+          messages: messages,
+          temperature: temperature,
+      })
     rescue StandardError => e
       puts e
     end
