@@ -6,7 +6,7 @@ $LOAD_PATH << '.'
 require 'ai_task.rb'
 
 ai = AiTask.new('inprompt')
-task = ai.get_task
+task = ai.task
 system_msg =  task['msg']
 question = task['question']
 
