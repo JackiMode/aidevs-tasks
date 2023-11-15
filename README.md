@@ -5,6 +5,7 @@ This repository contains libs and tasks from AI Devs 2 course
 ## Description
 
 This repository includes exercises, libraries, and tasks related to the AI Devs 2 course. Users can explore various Ruby-based functionalities and AI-related implementations.
+All tasks is running on Debian 11.8
 
 ## Ruby version and custom gems
 
@@ -23,6 +24,10 @@ open-uri (0.3.0)
 qdrant-ruby (0.9.4)
 securerandom (default: 0.2.2)
 ```
+
+## Software requirements 
+[Qdrant](https://qdrant.tech/)
+[mariadb](https://mariadb.org/)
 
 ## Installation
 
