@@ -26,7 +26,9 @@ securerandom (default: 0.2.2)
 ```
 
 ## Software requirements 
+
 [Qdrant](https://qdrant.tech/)
+
 [mariadb](https://mariadb.org/)
 
 ## Installation
