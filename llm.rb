@@ -42,6 +42,38 @@ class LLM
     return @model[:chat] == model_name
   end
 
+  def vision(options = {})
+    begin 
+      prompt = options[:prompt] ? options[:prompt] : 'Describe me this image'
+      url = options[:url]
+      rise StandardError 'No url of image provided' unless url
+    rescue StandardError => e 
+      puts e
+    end
+      system_message = {}
+      system_message = { role: "system", content: options[:system_prompt]} if options[:system_prompt]
+      max_tokens = options[:max_tokens] ? options[:max_tokens] : 300 
+    message = [
+      { "type": "text", "text": prompt},
+      { "type": "image_url",
+        "image_url": {
+          "url": url,
+        },
+      }
+    ]
+    user_messages = { role: "user", content: message}
+    messages = [system_message, user_messages].reject(&:empty?)
+    puts messages
+    response = @client.chat(
+    parameters: {
+        model: "gpt-4-vision-preview", # Required.
+        messages: messages, # Required.
+        max_tokens: max_tokens,
+    })
+    puts response
+    response.dig("choices", 0, "message", "content")
+  end
+
   def functions_chat(options = {})
     messages = options[:messages] ? options[:messages] : [{role: "user", content: "Hi Bot!"}] 
     model_name = @model[:chat] unless options[:model_name]
