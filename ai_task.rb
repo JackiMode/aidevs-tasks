@@ -24,6 +24,7 @@ class AiTask
   def send_answer(answer)
     url = "#{@endpoint}answer/#{@token}"
     data = { "answer": answer}.to_json
+    puts data
     response =  HTTParty.post(url, body: data)
     validate_response(response, url, 'POST')
     response

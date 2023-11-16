@@ -26,7 +26,7 @@ class LLM
     @client = OpenAI::Client.new
 
     # Hardcoded model names
-    @models = ['gpt-3.5-turbo', 'gpt-3.5-turbo-0613', 'gpt-4', 'gpt-4-0613']
+    @models = ['gpt-3.5-turbo', 'gpt-3.5-turbo-0613', 'gpt-4', 'gpt-4-0613', 'gpt-4-1106-preview']
     @model = {}
     @model[:audio] = 'whisper-1'
     @model[:embedding] = 'text-embedding-ada-002'
@@ -63,14 +63,12 @@ class LLM
     ]
     user_messages = { role: "user", content: message}
     messages = [system_message, user_messages].reject(&:empty?)
-    puts messages
     response = @client.chat(
     parameters: {
         model: "gpt-4-vision-preview", # Required.
         messages: messages, # Required.
         max_tokens: max_tokens,
     })
-    puts response
     response.dig("choices", 0, "message", "content")
   end
 
@@ -89,11 +87,6 @@ class LLM
     rescue StandardError => e
       puts e
     end
-    # puts '---'
-    # puts response
-    # puts '==='
-    # puts response.dig("choices", 0, "message", "function_call")
-    # puts '$$$'
     response.dig("choices", 0, "message", "function_call")
   end
 
