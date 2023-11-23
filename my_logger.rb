@@ -5,6 +5,7 @@ class MyLogger
   attr_accessor :file
   def initialize(filename)
     @file = File.open(filename, 'a')
+    @file.sync = true
   end
 
   def write(msg)

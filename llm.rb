@@ -26,7 +26,7 @@ class LLM
     @client = OpenAI::Client.new
 
     # Hardcoded model names
-    @models = ['gpt-3.5-turbo', 'gpt-3.5-turbo-0613', 'gpt-4', 'gpt-4-0613', 'gpt-4-1106-preview']
+    @models = ['gpt-3.5-turbo', 'gpt-3.5-turbo-0613', 'gpt-4', 'gpt-4-0613', 'gpt-4-1106-preview', 'ft:gpt-3.5-turbo-1106:personal::8O3pNwzJ']
     @model = {}
     @model[:audio] = 'whisper-1'
     @model[:embedding] = 'text-embedding-ada-002'
