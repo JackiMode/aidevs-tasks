@@ -12,7 +12,7 @@ require 'webrick'
 @ai = AiTask.new('ownapi')
 task = @ai.task
 
-@llm = LLM.new
+# @llm = LLM.new
 
 puts task
 puts @ai.send_answer(ENV['OWN_API_ENDPOINT'])
