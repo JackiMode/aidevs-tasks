@@ -80,22 +80,22 @@ def categorize(input)
     {role: "user", content: input},
   ]
   response = @llm.chat(:messages => messages, :functions => @functions)
-  rise StandardError 'BAD RESPONSE FORMAT: #{response}' unless response['name']
+  rise StandardError "BAD RESPONSE FORMAT: #{response}" unless response['name']
   args = JSON.parse(response['arguments'])
-  answer = case response['name']
-  when 'Remember'
-    remember(args)
-  when 'Answer'
-    answer(args)
-  else
-    rise StandardError 'A się popsuło'
-  end
+  answer =  case response['name']
+            when 'Remember'
+              remember(args)
+            when 'Answer'
+              answer(args)
+            else
+              rise StandardError 'A się popsuło'
+            end
   answer
 end
 
 def remember(options = {})
   @memory << options['message']
-  return options['assistant_response']
+  options['assistant_response']
 end
 
 def answer(options = {})

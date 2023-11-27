@@ -67,6 +67,8 @@ def generate_sentence()
     chunks.insert(random_index, merged_string)
 
   end
+
+  #
   md_combined = chunks.map { |item| item[:md] }.join(' ')
   html_combined = chunks.map { |item| item[:html] }.join(' ')
   random_tag_index = rand(0..(start_tags.length - 1))
